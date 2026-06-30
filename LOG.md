@@ -102,16 +102,61 @@ GROUP BY c.id, c.name;
 
 ---
 
+## 2026-06-30 — pandas · merge fan-out (도시명 붙여 총 주문액)
+
+**문제 (검토한 코드)**
+```python
+import pandas as pd
+
+orders = pd.DataFrame({
+    "order_id":  [1, 2, 3],
+    "city_code": ["A", "A", "B"],
+    "amount":    [100, 200, 300],
+})
+cities = pd.DataFrame({
+    "city_code": ["A", "A", "B"],
+    "city_name": ["서울", "Seoul", "부산"],   # 'A'가 2줄 — 더러운 매핑 테이블
+})
+merged = orders.merge(cities, on="city_code", how="left")
+total = merged["amount"].sum()
+print(total)
+```
+실제 주문액 합 = 600.
+
+### 오답 — merge 행 복제(fan-out)는 how(inner/left)로 막을 수 없다
+- **내 예측 변천(그대로)**:
+  - 1차: "merged 4행 / total 600. how=left라 짝 없는 행까지 포함되어 모두 더한 값." → ❌ (cities의 'A' 중복을 못 봄, fan-out 자체를 놓침)
+  - 2차: "merged 9행 / total 1800." → ❌ (과교정 — 전체 조합 cross join으로 오해)
+  - 3차: "merged 7행 / total 1200." → ❌ ('A' 매칭을 3줄로 오산, 실제 2줄)
+  - 4차: "merged 5행 / total 900." → ✅ **진단 합격**
+- **실제**: `cities`에 city_code 'A'가 2줄 → 'A' 주문(order 1·2)이 각각 2행으로 복제. merged = 2+2+1 = **5행**, `SUM` = 100×2+200×2+300×1 = **900** (실제 600의 1.5배). merge는 **키가 같은 행끼리만** 짝지음(cross join 아님).
+- **교정 변천**:
+  - 1차: `how="inner"`로 변경 → ❌ 세 주문 모두 매칭되므로 inner=left, 여전히 5행/900. **join 방식(inner/left)은 복제를 제어하지 않는다.**
+  - 2차: merge 제거(정답 방향) — 그러나 `total = merged["amount"].sum()`에서 지운 `merged`를 그대로 참조 → ❌ `NameError`(+ 콤마 누락 `SyntaxError`).
+  - 3차 (합격):
+    ```python
+    total = orders["amount"].sum()   # total엔 도시명 불필요 → cities/merge 제거
+    print(total)                      # 600
+    ```
+- **교훈**:
+  - `merge` = SQL `JOIN`. **오른쪽 키가 중복이면 행이 복제(fan-out)된다. `how`(inner/left/right/outer)는 *짝 없는 행* 처리만 바꿀 뿐, *짝 여러 개의 복제*를 막지 못한다.**
+  - 집계 metric(total)에 안 쓰는 테이블은 merge하지 않는다. 도시명도 필요하면 lookup을 `drop_duplicates("city_code")`로 1행/키 정제 후 merge(또는 `validate="m:1"`로 사전 검증).
+  - 변수를 지웠으면 그 변수를 참조하는 줄도 같이 고친다(`NameError` 자가검증).
+
+---
+
 ## 강화된 교훈 (누적)
 - 집계 쿼리는 `SUM`/`COUNT` 전에 **"이 JOIN이 행을 늘리나?"** 를 먼저 묻는다.
 - 의심되면 **`GROUP BY`/`SUM`을 떼고 JOIN 결과를 한 행씩 펼쳐서** 직접 센다. (머릿속 직관 < 실제 행 전개)
 - `WHERE`는 *어떤 행을 통과시킬지*만 거른다. **이미 복제된 행을 다시 합쳐 줄이지 못한다.**
 - **교정도 검증한다** (학습 완료 = 진단 → 교정 → 교정 검증): 손쉬운 `SUM(DISTINCT)`는 값이 우연히 겹치면 또 틀린다 → 근본은 *불필요한 JOIN 제거*. 그리고 내가 방금 짠 fix도 컬럼명까지 한 번 더 읽는다.
 - 묶는 기준은 라벨(name)이 아니라 **식별자(id)**.
+- **(pandas) `merge` = `JOIN`** — 오른쪽 키가 중복이면 fan-out 복제. `how`(inner/left)는 *짝 없는 행* 처리만 바꿀 뿐 복제를 못 막는다. 집계에 안 쓰는 테이블은 merge하지 않는다(`validate="m:1"`로 사전 검증 가능).
 
 ### 다음 개선 포인트
 - 코드를 위→아래 직관으로만 읽지 말고, **데이터를 머릿속에서 한 행씩 굴려 반례를 떠올리기**. "order 10에 payment 2건이면? 동명이인이면?"
 - 다음 SQL 날: **"JOIN 행 복제"를 스캐폴드 없이 cold로** 재확인 — 혼자 join을 펼쳐 진단 + 교정까지 가면 진짜 마스터.
+- 다음 pandas 날: **`merge` fan-out을 cold로** 재확인 (이번엔 4→9→7→5 / inner→merge제거까지 스캐폴드가 많이 필요했음 — 개념은 잡았으나 손에 덜 익음).
 
 ---
 
