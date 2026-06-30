@@ -143,6 +143,12 @@ print(total)
   - 집계 metric(total)에 안 쓰는 테이블은 merge하지 않는다. 도시명도 필요하면 lookup을 `drop_duplicates("city_code")`로 1행/키 정제 후 merge(또는 `validate="m:1"`로 사전 검증).
   - 변수를 지웠으면 그 변수를 참조하는 줄도 같이 고친다(`NameError` 자가검증).
 
+### 🔁 복습 (cold 재확인) — 2026-06-30
+같은 개념(merge fan-out)을 새 시나리오로 **힌트 없이** 재출제: `employees × departments`, dept_id 20이 departments에 2줄(개발/Development).
+- **cold 1차(그대로)**: "merged 7행 / total 2300 / *left merge라서 모든 행이 더해짐* / 교정 `salary.sum()`" → ❌ — total 2300은 맞혔으나 **행 수 7 오답 + 원인을 다시 'how=left'로 회귀**(오늘 오전 고친 함정). 교정도 `salary` 미정의(`NameError`).
+- **나사 한 번 조인 뒤**("오른쪽 키 `departments.dept_id`가 유니크한가?"): 중복키(20) 발견 → emp3가 2행 복제 → **5행 / 2300**, 원인을 *중복 키*로 정확히 지목, 교정 `employees['salary'].sum()`(=1800, 동작) → ✅ **합격**.
+- **남은 습관**: merge를 보면 *제일 먼저* "오른쪽 조인 키가 유니크한가(1:1? 1:N?)"를 묻기. 코드 가드는 `merge(..., validate="m:1")` — 더러운 lookup이면 `MergeError`로 즉시 잡힘(③ 교정 검증 실전 도구).
+
 ---
 
 ## 강화된 교훈 (누적)
@@ -156,7 +162,7 @@ print(total)
 ### 다음 개선 포인트
 - 코드를 위→아래 직관으로만 읽지 말고, **데이터를 머릿속에서 한 행씩 굴려 반례를 떠올리기**. "order 10에 payment 2건이면? 동명이인이면?"
 - 다음 SQL 날: **"JOIN 행 복제"를 스캐폴드 없이 cold로** 재확인 — 혼자 join을 펼쳐 진단 + 교정까지 가면 진짜 마스터.
-- 다음 pandas 날: **`merge` fan-out을 cold로** 재확인 (이번엔 4→9→7→5 / inner→merge제거까지 스캐폴드가 많이 필요했음 — 개념은 잡았으나 손에 덜 익음).
+- pandas `merge` fan-out: 2026-06-30 cold 재확인 → 1차에 'how=left' 오해로 회귀, 나사 한 번 조인 뒤 합격. **개념 OK. 남은 건 "오른쪽 키 유니크?"를 *자동으로* 묻는 습관 + `validate=` 가드 손에 익히기.**
 
 ---
 
