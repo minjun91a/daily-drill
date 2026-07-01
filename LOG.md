@@ -267,7 +267,7 @@
   # → a=['login'], b=['click'], c=['logout'] (독립)
   ```
   교정 변천: ① for문 → ❌ (반복문은 원인 아님) · ② `batch='None'`(문자열!) + `if batch==1;` → ❌ (문법·개념 오류, 버그 그대로) · ③ 위 코드로 합격.
-  프로 버전(넘겨받은 batch도 허용): `def add_event(event, batch=None): if batch is None: batch = []`.
+  넘겨받은 batch도 허용하는 **프로 버전**(선택 인자 `batch=None`) + 그 과정에서 만난 들여쓰기 함정은 아래 **`보충 — 프로 버전`** 참고.
 - **교훈**: 기본 인자는 **정의 시 1번** 평가된다 → 리스트·딕트 같은 mutable을 기본값에 두면 호출 간 공유(버그). 매 호출 새 객체가 필요하면 **함수 몸통 안**에서 만든다(`None` 기본값 + `is None` 체크가 표준). `None`(값) ≠ `'None'`(문자열).
 - **보충 — `None` 비교는 `is None`으로 (`== None` 아님)**: `is None` / `is not None`이 정답 습관(PEP 8 공식 권장). `== None`은 *문법 오류는 아니고* 평범한 경우 잘 동작하지만 **비권장·위험**. 직접 검증한 근거:
 
@@ -282,6 +282,43 @@
   - None은 파이썬에 **딱 하나뿐인 객체(싱글턴)** → "그 None이냐"는 값(`==`)이 아니라 **정체성(`is`)** 질문.
   - `==`는 클래스가 `__eq__`를 덮으면 **속을 수 있다**(위 3행). `is`는 객체 정체성이라 안 속음.
   - **numpy/pandas 배열**은 `배열 == None`이 bool이 아니라 **원소별 결과** → `if`에서 `ValueError`. 데이터 실무에서 제일 자주 만나는 함정.
+
+#### 보충 — 프로 버전: 선택 인자 `batch=None` (넘긴 batch도 이어붙이기)
+
+간단판(`def add_event(event):` + 몸통에서 `batch = []`)은 *항상* 새 리스트라 남이 만든 리스트를 못 받는다. 프로 버전은 `batch`를 **선택 매개변수**로 남겨 "새로 시작"과 "기존 리스트에 이어붙이기"를 모두 지원한다.
+
+**`()` 안 매개변수 해석** — 함수가 받는 재료 목록이고, `=` 유무가 필수/선택을 가른다:
+
+| 매개변수 | 의미 |
+|---|---|
+| `event` (`=` 없음) | **필수** — 안 주면 에러 |
+| `batch=None` (`=` 있음) | **선택** — 안 주면 자동으로 `None` |
+
+**호출별 동작:**
+```python
+add_event("login")          # batch=None  → if 참 → 새 [] → append → ['login']
+add_event("save", ["x"])    # batch=["x"] → if 거짓 → 바로 append → ['x', 'save']
+```
+기본값을 `[]`가 아니라 **`None`**으로 두는 이유: `[]`면 정의 시 1번 생성돼 호출 간 공유되는 버그(위 오답). `None`은 안전한 "안 줬음" 표시라, 몸통에서 그때그때 새 `[]`를 만든다.
+
+**내가 겪은 함정 — 들여쓰기 한 칸이 로직을 바꿈:**
+```python
+# ❌ append가 if 안 → batch를 넘기면(if 거짓) append 통째로 건너뜀 → event 누락
+def add_event(event, batch=None):
+    if batch is None:
+        batch = []
+        batch.append(event)   # if 블록 안
+    return batch
+
+# ✅ append를 몸통으로 빼 두 경우 모두 실행
+def add_event(event, batch=None):
+    if batch is None:
+        batch = []
+    batch.append(event)       # if 밖 = 함수 몸통
+    return batch
+```
+- 검증: `add_event("save", ["x"])` → ❌판은 `['x']`(save 누락), ✅판은 `['x', 'save']`.
+- **교훈**: `if` 블록 안은 *조건이 참일 때만* 실행된다. **항상 해야 할 일(append)을 `if` 안에 두면 조건이 거짓일 때 조용히 누락**된다. 들여쓰기 = 코드의 실행 범위.
 
 ### 그날의 핵심
 - mutable 기본 인자(`[]`, `{}`)는 **정의 시 1번 생성** → 호출 간 공유되는 함정. 매 호출 새 객체는 *몸통 안*에서 만든다.
