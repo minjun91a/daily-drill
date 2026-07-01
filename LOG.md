@@ -237,6 +237,46 @@
 
 ---
 
+## 📅 2026-07-01 · Day 3 — Python
+
+### 정규
+
+#### 오답 — mutable 기본 인자(`batch=[]`)는 호출 간에 공유된다
+- **문제 (검토한 코드)**:
+  ```python
+  def add_event(event, batch=[]):
+      batch.append(event)
+      return batch
+
+  a = add_event("login")
+  b = add_event("click")
+  c = add_event("logout")
+
+  print(a); print(b); print(c)
+  ```
+- **내 예측 변천 (그대로)**:
+  - 1차: "a=login, b=click, c=logout 따로 출력 / 원인은 for문 필요 / 교정도 for문." → ❌ (출력·원인·교정 빗나감. 단 '독립적 새 batch가 아니라 하나의 batch에 계속 쌓인다'는 핵심은 이때 이미 맞힘)
+  - 2차: "셋 다 `['login', 'click', 'logout']` — a·b·c가 *같은 리스트를 가리키는 세 이름*이라서." → ✅ **진단 합격** (aliasing까지 정확)
+- **실제**: `batch=[]` 기본값은 **함수 정의 시 딱 한 번** 생성 → 모든 호출이 그 한 리스트를 공유·누적. a·b·c는 같은 객체를 가리켜 셋 다 `['login', 'click', 'logout']`.
+- **교정 (고친 코드)**:
+  ```python
+  def add_event(event):
+      batch = []            # 호출마다 몸통이 실행 → 새 빈 리스트
+      batch.append(event)
+      return batch
+  # → a=['login'], b=['click'], c=['logout'] (독립)
+  ```
+  교정 변천: ① for문 → ❌ (반복문은 원인 아님) · ② `batch='None'`(문자열!) + `if batch==1;` → ❌ (문법·개념 오류, 버그 그대로) · ③ 위 코드로 합격.
+  프로 버전(넘겨받은 batch도 허용): `def add_event(event, batch=None): if batch is None: batch = []`.
+- **교훈**: 기본 인자는 **정의 시 1번** 평가된다 → 리스트·딕트 같은 mutable을 기본값에 두면 호출 간 공유(버그). 매 호출 새 객체가 필요하면 **함수 몸통 안**에서 만든다(`None` 기본값 + `is None` 체크가 표준). `None`(값) ≠ `'None'`(문자열).
+
+### 그날의 핵심
+- mutable 기본 인자(`[]`, `{}`)는 **정의 시 1번 생성** → 호출 간 공유되는 함정. 매 호출 새 객체는 *몸통 안*에서 만든다.
+- 변수 여러 개가 같은 리스트를 가리키면(aliasing) 하나를 바꿔도 전부 바뀐 것처럼 보인다.
+- 감이 안 오면 대개 개념이 아직 덜 잡힌 것 — 핵심을 잡으면 고침은 한 줄일 때가 많다.
+
+---
+
 ## 📚 누적 (전 기간)
 
 ### 강화된 교훈
@@ -246,6 +286,7 @@
 - **교정도 검증한다** (학습 완료 = 진단 → 교정 → 교정 검증): 손쉬운 `SUM(DISTINCT)`는 값이 우연히 겹치면 또 틀린다 → 근본은 *불필요한 JOIN 제거*. 그리고 내가 방금 짠 fix도 컬럼명까지 한 번 더 읽는다.
 - 묶는 기준은 라벨(name)이 아니라 **식별자(id)**.
 - **(pandas) `merge` = `JOIN`** — 오른쪽 키가 중복이면 fan-out 복제. `how`(inner/left)는 *짝 없는 행* 처리만 바꿀 뿐 복제를 못 막는다. 집계에 안 쓰는 테이블은 merge하지 않는다(`validate="m:1"`로 사전 검증 가능).
+- **(Python) mutable 기본 인자**(`def f(x, items=[])`)는 정의 시 1번 생성 → 호출 간 공유되는 함정. 매 호출 새 객체가 필요하면 몸통 안에서(`items=None` + `if items is None: items=[]`).
 
 ### 다음 개선 포인트
 - 코드를 위→아래 직관으로만 읽지 말고, **데이터를 머릿속에서 한 행씩 굴려 반례를 떠올리기**. "order 10에 payment 2건이면? 동명이인이면?"
