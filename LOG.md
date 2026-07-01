@@ -320,10 +320,59 @@ def add_event(event, batch=None):
 - 검증: `add_event("save", ["x"])` → ❌판은 `['x']`(save 누락), ✅판은 `['x', 'save']`.
 - **교훈**: `if` 블록 안은 *조건이 참일 때만* 실행된다. **항상 해야 할 일(append)을 `if` 안에 두면 조건이 거짓일 때 조용히 누락**된다. 들여쓰기 = 코드의 실행 범위.
 
+#### 보충 — 함수 읽기 기초: `return` · 지역변수(scope)
+
+Day 3 코드를 파다 나온 기초 3가지. mutable 함정과는 별개로 "함수를 코드로 읽는 눈"의 토대.
+
+**① `if`와 `return`은 독립** — `if`는 *실행 여부*, `return`은 *돌려줄 값*. 서로 무관하다.
+```python
+def 판정(x):
+    if x > 0:          # 조건은 x
+        y = "양수"
+    else:
+        y = "음수/0"
+    return y           # 돌려주는 건 y — x와 전혀 다름
+```
+`if`에 쓴 변수와 `return` 값은 같을 수도, 완전히 다를 수도 있다. `add_event`가 `return batch`였던 건 "함수 목적이 batch를 돌려주는 것"이라서지 `if`가 batch를 언급해서가 아니다. (batch 길이를 원하면 `return len(batch)`도 정상.)
+
+**② 반환값 읽는 법** — `return` 단어를 찾고 → 어느 경로가 실행되는지 보고 → 그 뒤 값을 계산. `return`을 하나도 안 만나면 `None`. `return`이 실행되면 함수는 *즉시* 끝난다(먼저 만난 return이 이김).
+```python
+def grade(score):
+    if score >= 90:
+        return "A"     # 먼저 참이면 여기서 끝
+    if score >= 80:
+        return "B"
+    return "C"
+# grade(95)->'A'   grade(85)->'B'   grade(50)->'C'   (경로 따라 다른 return)
+
+def greet(name):
+    print("hi", name)  # return 없음
+# greet("x") 의 반환값 -> None
+```
+`return` 뒤엔 변수·값·계산식(`return len(batch)`)·함수호출·튜플(`return x, y`)·없음(→`None`) 다 가능.
+
+**③ 지역변수(scope) + `return` vs `print`** — 함수 *안* 변수(`result`, `n`)는 함수 *밖*에서 안 보인다.
+```python
+def check(n):
+    if n % 2 == 0:
+        result = "짝수"
+    else:
+        result = "홀수"
+    return result
+
+print(result)        # ❌ NameError — result는 check 안에서만 삶
+answer = check(7)    # ✅ 반환값을 받아서
+print(answer)        #    출력  -> '홀수'
+print(check(7))      # ✅ 또는 호출 결과를 바로  -> '홀수'
+```
+- **함수 밖에서는** 내부 변수 이름(`result`, `n`)이 아니라 **반환값**을 쓴다 → `print(check(7))`.
+- **`return`** = 값을 함수 밖으로 *돌려줌*(화면엔 안 보임) vs **`print`** = 화면에 *보여줌*(돌려주는 것 아님). 관례: **값은 `return`, 출력은 밖에서.**
+
 ### 그날의 핵심
 - mutable 기본 인자(`[]`, `{}`)는 **정의 시 1번 생성** → 호출 간 공유되는 함정. 매 호출 새 객체는 *몸통 안*에서 만든다.
 - 변수 여러 개가 같은 리스트를 가리키면(aliasing) 하나를 바꿔도 전부 바뀐 것처럼 보인다.
 - 감이 안 오면 대개 개념이 아직 덜 잡힌 것 — 핵심을 잡으면 고침은 한 줄일 때가 많다.
+- (함수 기초) `if`≠`return`(독립) · 반환값은 `return` 뒤를 *경로 따라* 읽기 · 지역변수는 함수 밖에서 안 보임(scope) → 밖에선 반환값 사용. (↑ 보충 참고)
 
 ---
 
