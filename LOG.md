@@ -269,6 +269,19 @@
   교정 변천: ① for문 → ❌ (반복문은 원인 아님) · ② `batch='None'`(문자열!) + `if batch==1;` → ❌ (문법·개념 오류, 버그 그대로) · ③ 위 코드로 합격.
   프로 버전(넘겨받은 batch도 허용): `def add_event(event, batch=None): if batch is None: batch = []`.
 - **교훈**: 기본 인자는 **정의 시 1번** 평가된다 → 리스트·딕트 같은 mutable을 기본값에 두면 호출 간 공유(버그). 매 호출 새 객체가 필요하면 **함수 몸통 안**에서 만든다(`None` 기본값 + `is None` 체크가 표준). `None`(값) ≠ `'None'`(문자열).
+- **보충 — `None` 비교는 `is None`으로 (`== None` 아님)**: `is None` / `is not None`이 정답 습관(PEP 8 공식 권장). `== None`은 *문법 오류는 아니고* 평범한 경우 잘 동작하지만 **비권장·위험**. 직접 검증한 근거:
+
+  | 케이스 | `== None` | `is None` |
+  |--------|-----------|-----------|
+  | `None` 자체 | `True` | `True` |
+  | 빈 리스트 `[]` | `False` | `False` |
+  | 커스텀 `__eq__` 객체 | `True` ⚠️ | `False` ✅ |
+  | numpy 배열 | `[False False False]`(bool 아님) | `False` ✅ |
+  | numpy `if arr == None:` | **`ValueError`** 💥 | 안전 |
+
+  - None은 파이썬에 **딱 하나뿐인 객체(싱글턴)** → "그 None이냐"는 값(`==`)이 아니라 **정체성(`is`)** 질문.
+  - `==`는 클래스가 `__eq__`를 덮으면 **속을 수 있다**(위 3행). `is`는 객체 정체성이라 안 속음.
+  - **numpy/pandas 배열**은 `배열 == None`이 bool이 아니라 **원소별 결과** → `if`에서 `ValueError`. 데이터 실무에서 제일 자주 만나는 함정.
 
 ### 그날의 핵심
 - mutable 기본 인자(`[]`, `{}`)는 **정의 시 1번 생성** → 호출 간 공유되는 함정. 매 호출 새 객체는 *몸통 안*에서 만든다.
@@ -287,6 +300,7 @@
 - 묶는 기준은 라벨(name)이 아니라 **식별자(id)**.
 - **(pandas) `merge` = `JOIN`** — 오른쪽 키가 중복이면 fan-out 복제. `how`(inner/left)는 *짝 없는 행* 처리만 바꿀 뿐 복제를 못 막는다. 집계에 안 쓰는 테이블은 merge하지 않는다(`validate="m:1"`로 사전 검증 가능).
 - **(Python) mutable 기본 인자**(`def f(x, items=[])`)는 정의 시 1번 생성 → 호출 간 공유되는 함정. 매 호출 새 객체가 필요하면 몸통 안에서(`items=None` + `if items is None: items=[]`).
+- **(Python) `None` 비교는 항상 `is None` / `is not None`** (`== None` 아님). 이유: 싱글턴 정체성 / `==`는 `__eq__`에 속을 수 있음 / numpy·pandas 배열에선 `==None`이 원소별 → `if`에서 `ValueError`.
 
 ### 다음 개선 포인트
 - 코드를 위→아래 직관으로만 읽지 말고, **데이터를 머릿속에서 한 행씩 굴려 반례를 떠올리기**. "order 10에 payment 2건이면? 동명이인이면?"
