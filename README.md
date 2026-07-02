@@ -2,7 +2,7 @@
 
 <!-- ▼▼ 꾸준함 = 이 레포의 포트폴리오 신호. last-commit 배지가 "매일 한다"를 증명 ▼▼ -->
 ![last commit](https://img.shields.io/github/last-commit/minjun91a/daily-drill)
-![days](https://img.shields.io/badge/Day-4-brightgreen)
+![days](https://img.shields.io/badge/Day-5-brightgreen)
 ![rotation](https://img.shields.io/badge/rotation-SQL%E2%86%92pandas%E2%86%92Python-blue)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 <!-- ▲▲ 배지 끝 ▲▲ -->
@@ -57,6 +57,7 @@ GROUP BY u.id, u.name;
 | [2](days/2026-06-30-pandas.md) | 2026-06-30 | pandas | merge에서 붙이는 쪽 키가 중복이면 행이 복제됨 · `how`로는 못 막음 | ✅ |
 | [3](days/2026-07-01-python.md) | 2026-07-01 | Python | 함수 기본값 `[]`가 호출마다 공유되는 함정 · `is None` · 함수 코드 읽는 법 | ✅ |
 | [4](days/2026-07-02-sql.md) | 2026-07-02 | SQL | JOIN 행 복제(fan-out)를 **힌트 없이** 재진단(Day 1 착각 극복) · 부풀림 배수는 그룹마다 다름 · **직접 구현**: 집계 쿼리 백지 작성(`COUNT(DISTINCT)`로 fan-out 회피) | ✅ |
+| [5](days/2026-07-03-pandas.md) | 2026-07-03 | pandas | `groupby` ≠ SQL `JOIN` · groupby는 NaN 그룹 키를 기본(`dropna=True`)으로 버려 총합이 어긋남 → `dropna=False` | ✅ |
 
 > 영역은 `SQL → pandas → Python`을 돌아가며. 각 날짜 = `오늘의 문제 → (재도전) → (복습) → 그날의 핵심`.
 > *재도전 = 틀린 걸 다른 유형으로 다시 풀어 맞출 때까지 · 복습 = 같은 개념을 힌트 없이 되짚기.*
