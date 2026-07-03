@@ -19,7 +19,7 @@
 ## 📚 로드맵 (L0 → L10)
 | L | 주제 | 핵심 명령 | 숨은 OS 개념 | 환경 | 상태 |
 |:-:|------|-----------|--------------|:---:|:---:|
-| 0 | 탐색·이동 | `pwd ls cd` 경로(`~ . ..`) | 파일시스템 트리 | Git Bash OK | ⬜ |
+| [0](L0-navigation.md) | 탐색·이동 | `pwd ls cd` 경로(`~ . ..`) | 파일시스템 트리 | Git Bash OK | ✅ |
 | 1 | 파일 조작 | `mkdir cp mv rm cat less` | 경로·inode | Git Bash OK | ⬜ |
 | 2 | 검색·집계 | `grep find wc sort uniq` | 텍스트 스트림 | Git Bash OK | ⬜ |
 | 3 | 파이프·리다이렉션 | `\| > >> 2> /dev/null` | stdin/stdout/stderr | Git Bash OK | ⬜ |
@@ -41,4 +41,4 @@
 ## 진행 기록
 | 레벨 | 파일 | 완료일 |
 |------|------|--------|
-| (아직 없음 — L0부터 시작) | | |
+| L0 탐색·이동 | [L0-navigation.md](L0-navigation.md) | 2026-07-03 |
