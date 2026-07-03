@@ -6,15 +6,10 @@
 
 > 운영체제 *원리* 자체(프로세스·메모리·스케줄링 이론)는 **별개 트랙** → [`../os-theory/`](../os-theory/README.md). 여기(Linux)는 그 개념들을 *명령으로 손에 익히는* 실무 쪽.
 
-## ⚙️ 연습 환경
-- **목표: WSL2 (진짜 우분투)** — 권한·프로세스·systemctl·apt까지 제대로.
-  설치(수업 끝나고, 재부팅 가능할 때):
-  1. **관리자 권한 PowerShell** 실행
-  2. `wsl --install` (기본으로 Ubuntu 설치됨)
-  3. **재부팅**
-  4. 부팅 후 우분투 창에서 사용자 이름·비밀번호 생성
-  5. 끝 → 그때부터 L4·L5·L9·L10 진행
-- **임시: Git Bash (지금)** — 재부팅 전까지 **L0~L3·L6~L8**은 여기서 바로 연습 가능.
+## ⚙️ 연습 환경 — WSL2 준비 완료 ✅
+- **WSL2 + Ubuntu 24.04 이미 설치·동작** (사용자 `min`). **재부팅·설치 불필요.** → **전 레벨(L0~L10) 진짜 리눅스로 진행 가능** (권한·프로세스·sudo 실제 동작 확인 완료: `chmod 640 → -rw-r-----`, `ps -e` OK).
+- **실행법**: 터미널/PowerShell에서 `wsl` 입력, 또는 시작 메뉴 → **Ubuntu**.
+- (Git Bash로도 L0~L3·L6~L8은 되지만, 이제 굳이 안 나눠도 됨.)
 
 ## 📚 로드맵 (L0 → L10)
 | L | 주제 | 핵심 명령 | 숨은 OS 개념 | 환경 | 상태 |
@@ -23,13 +18,13 @@
 | 1 | 파일 조작 | `mkdir cp mv rm cat less` | 경로·inode | Git Bash OK | ⬜ |
 | 2 | 검색·집계 | `grep find wc sort uniq` | 텍스트 스트림 | Git Bash OK | ⬜ |
 | 3 | 파이프·리다이렉션 | `\| > >> 2> /dev/null` | stdin/stdout/stderr | Git Bash OK | ⬜ |
-| 4 | 권한·소유권 | `chmod chown` rwx `644/755` | OS 권한 모델 | **WSL 필요** | ⬜ |
-| 5 | 프로세스 | `ps top kill &` `jobs fg/bg` | 프로세스·시그널 | **WSL 필요** | ⬜ |
+| 4 | 권한·소유권 | `chmod chown` rwx `644/755` | OS 권한 모델 | **WSL ✅** | ⬜ |
+| 5 | 프로세스 | `ps top kill &` `jobs fg/bg` | 프로세스·시그널 | **WSL ✅** | ⬜ |
 | 6 | 텍스트 처리 | `cut tr sed awk`(기초) | 스트림 가공 | Git Bash OK | ⬜ |
 | 7 | 환경·쉘 | `env export PATH .bashrc` | 환경변수·쉘 | Git Bash OK | ⬜ |
 | 8 | 쉘 스크립트 | shebang 변수 `if/for $1` 종료코드 | 자동화 | Git Bash OK | ⬜ |
-| 9 | 네트워크·원격 | `ssh scp curl ss` | 포트·원격 | WSL 권장 | ⬜ |
-| 10 | 실무 | `cron tar gzip apt systemctl` | 서비스 운영 | **WSL 필요** | ⬜ |
+| 9 | 네트워크·원격 | `ssh scp curl ss` | 포트·원격 | WSL ✅ | ⬜ |
+| 10 | 실무 | `cron tar gzip apt systemctl` | 서비스 운영 | **WSL ✅** | ⬜ |
 
 각 레벨 1~2일. 완료하면 상태 ⬜ → ✅, 아래에 `linux/L<n>-<주제>.md` 링크 추가.
 
