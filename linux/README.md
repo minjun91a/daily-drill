@@ -15,7 +15,7 @@
 | L | 주제 | 핵심 명령 | 숨은 OS 개념 | 환경 | 상태 |
 |:-:|------|-----------|--------------|:---:|:---:|
 | [0](L0-navigation.md) | 탐색·이동 | `pwd ls cd` 경로(`~ . ..`) | 파일시스템 트리 | Git Bash OK | ✅ |
-| 1 | 파일 조작 | `mkdir cp mv rm cat less` | 경로·inode | Git Bash OK | ⬜ |
+| [1](L1-files.md) | 파일 조작 | `mkdir cp mv rm cat less` | 경로·inode | WSL ✅ | ✅ |
 | 2 | 검색·집계 | `grep find wc sort uniq` | 텍스트 스트림 | Git Bash OK | ⬜ |
 | 3 | 파이프·리다이렉션 | `\| > >> 2> /dev/null` | stdin/stdout/stderr | Git Bash OK | ⬜ |
 | 4 | 권한·소유권 | `chmod chown` rwx `644/755` | OS 권한 모델 | **WSL ✅** | ⬜ |
@@ -37,3 +37,4 @@
 | 레벨 | 파일 | 완료일 |
 |------|------|--------|
 | L0 탐색·이동 | [L0-navigation.md](L0-navigation.md) | 2026-07-03 |
+| L1 파일 조작 | [L1-files.md](L1-files.md) | 2026-07-03 |
