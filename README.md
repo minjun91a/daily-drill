@@ -2,7 +2,7 @@
 
 <!-- ▼▼ 꾸준함 = 이 레포의 포트폴리오 신호. last-commit 배지가 "매일 한다"를 증명 ▼▼ -->
 ![last commit](https://img.shields.io/github/last-commit/minjun91a/daily-drill)
-![days](https://img.shields.io/badge/Day-5-brightgreen)
+![days](https://img.shields.io/badge/Day-6-brightgreen)
 ![rotation](https://img.shields.io/badge/rotation-SQL%E2%86%92pandas%E2%86%92Python-blue)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 <!-- ▲▲ 배지 끝 ▲▲ -->
@@ -58,6 +58,7 @@ GROUP BY u.id, u.name;
 | [3](days/2026-07-01-python.md) | 2026-07-01 | Python | 함수 기본값 `[]`가 호출마다 공유되는 함정 · `is None` · 함수 코드 읽는 법 | ✅ |
 | [4](days/2026-07-02-sql.md) | 2026-07-02 | SQL | JOIN 행 복제(fan-out)를 **힌트 없이** 재진단(Day 1 착각 극복) · 부풀림 배수는 그룹마다 다름 · **직접 구현**: 집계 쿼리 백지 작성(`COUNT(DISTINCT)`로 fan-out 회피) | ✅ |
 | [5](days/2026-07-03-pandas.md) | 2026-07-03 | pandas | `groupby` ≠ SQL `JOIN` · groupby는 NaN 그룹 키를 기본(`dropna=True`)으로 버려 총합이 어긋남 → `dropna=False` · **직접 구현**: 결제수단별 집계 백지 작성(None 그룹 포함) | ✅ |
+| [6](days/2026-07-03-python.md) | 2026-07-03 | Python | 리스트를 순회하며 `remove`로 수정하면 index가 밀려 원소를 건너뜀 → 사본 순회(`nums[:]`) 또는 새 리스트(컴프리헨션) | ✅ |
 
 > 영역은 `SQL → pandas → Python`을 돌아가며. 각 날짜 = `오늘의 문제 → (재도전) → (복습) → 그날의 핵심`.
 > *재도전 = 틀린 걸 다른 유형으로 다시 풀어 맞출 때까지 · 복습 = 같은 개념을 힌트 없이 되짚기.*
@@ -79,6 +80,7 @@ GROUP BY u.id, u.name;
 - **(pandas)** `groupby`는 SQL `JOIN`과 **다르다** — 한 DataFrame을 키로 묶는 것. 기본 `dropna=True`라 **NaN 그룹 키 행을 조용히 버려** 총합이 원본과 어긋난다. 살리려면 `dropna=False`.
 - **(Python)** 함수 기본값에 `[]`·`{}`를 두면 정의될 때 한 번만 만들어져 호출 간 공유된다. 매번 새 값이 필요하면 함수 안에서 만든다.
 - **(Python)** `None` 비교는 항상 `is None`으로 한다. (`== None`은 커스텀 객체·배열에서 틀린 결과나 에러)
+- **(Python)** 리스트를 **순회하며 그 리스트를 수정**(`remove`/`del`)하면 index가 밀려 원소를 건너뛴다. 사본 순회(`nums[:]`) 또는 컴프리헨션으로 새 리스트를 만든다.
 
 ## 왜 이 훈련을 하는가
 AI가 코드를 대신 써주는 시대일수록, 그 코드를 **읽고·검증하고·디버깅하는 능력**이 개발자의 진짜 경쟁력이 된다. 이 레포는 그 능력을 매일 의식적으로 훈련한 기록이다. "구현을 AI에 위임할수록 라인 단위 검증 근육이 약해진다"는 문제를 스스로 진단하고, 그 약점을 재능이 아니라 **시스템(매일 반복 · 예측 우선 · 오답 발견)**으로 메운다. 여기서 축적한 검증 패턴은 멀티에이전트 엔진 [mint-agent](https://github.com/minjun91a/mint-agent)의 trust layer 규칙으로 이어진다.
