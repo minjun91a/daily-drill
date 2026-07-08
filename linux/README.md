@@ -17,7 +17,7 @@
 | [0](L0-navigation.md) | 탐색·이동 | `pwd ls cd` 경로(`~ . ..`) | 파일시스템 트리 | Git Bash OK | ✅ |
 | [1](L1-files.md) | 파일 조작 | `mkdir cp mv rm cat less` | 경로·inode | WSL ✅ | ✅ |
 | [2](L2-search.md) | 검색·집계 | `grep find wc sort uniq` | 텍스트 스트림 | WSL ✅ | ✅ |
-| 3 | 파이프·리다이렉션 | `\| > >> 2> /dev/null` | stdin/stdout/stderr | Git Bash OK | ⬜ |
+| [3](L3-pipes.md) | 파이프·리다이렉션 | `\| > >> 2> /dev/null` | stdin/stdout/stderr | WSL ✅ | ✅ |
 | 4 | 권한·소유권 | `chmod chown` rwx `644/755` | OS 권한 모델 | **WSL ✅** | ⬜ |
 | 5 | 프로세스 | `ps top kill &` `jobs fg/bg` | 프로세스·시그널 | **WSL ✅** | ⬜ |
 | 6 | 텍스트 처리 | `cut tr sed awk`(기초) | 스트림 가공 | Git Bash OK | ⬜ |
@@ -39,3 +39,4 @@
 | L0 탐색·이동 | [L0-navigation.md](L0-navigation.md) | 2026-07-03 |
 | L1 파일 조작 | [L1-files.md](L1-files.md) | 2026-07-03 |
 | L2 검색·집계 | [L2-search.md](L2-search.md) | 2026-07-03 |
+| L3 파이프·리다이렉션 | [L3-pipes.md](L3-pipes.md) | 2026-07-08 |
