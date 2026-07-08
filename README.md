@@ -59,6 +59,7 @@ GROUP BY u.id, u.name;
 | [4](days/2026-07-02-sql.md) | 2026-07-02 | SQL | JOIN 행 복제(fan-out)를 **힌트 없이** 재진단(Day 1 착각 극복) · 부풀림 배수는 그룹마다 다름 · **직접 구현**: 집계 쿼리 백지 작성(`COUNT(DISTINCT)`로 fan-out 회피) | ✅ |
 | [5](days/2026-07-03-pandas.md) | 2026-07-03 | pandas | `groupby` ≠ SQL `JOIN` · groupby는 NaN 그룹 키를 기본(`dropna=True`)으로 버려 총합이 어긋남 → `dropna=False` · **직접 구현**: 결제수단별 집계 백지 작성(None 그룹 포함) | ✅ |
 | [6](days/2026-07-03-python.md) | 2026-07-03 | Python | 리스트를 순회하며 `remove`로 수정하면 index가 밀려 원소를 건너뜀 → 사본 순회(`nums[:]`) 또는 새 리스트(컴프리헨션) | ✅ |
+| [7](days/2026-07-08-sql.md) | 2026-07-08 | SQL | `GROUP BY`가 JOIN 복제를 다시 접음(출력=그룹 수) · 빈 그룹은 `COUNT`→0·`SUM`→NULL(`COALESCE`로 0) · `COUNT(*)`≠`COUNT(컬럼)` · **직접 구현**: LEFT JOIN 빈 그룹 0 처리 백지 작성(`COALESCE(SUM(x),0)`) | ✅ |
 
 > 영역은 `SQL → pandas → Python`을 돌아가며. 각 날짜 = `오늘의 문제 → (재도전) → (복습) → 그날의 핵심`.
 > *재도전 = 틀린 걸 다른 유형으로 다시 풀어 맞출 때까지 · 복습 = 같은 개념을 힌트 없이 되짚기.*
@@ -76,6 +77,8 @@ GROUP BY u.id, u.name;
 - **`WHERE`·`how` 같은 필터/조인 방식은 행 복제를 막지 못한다.** (필터는 "어떤 행을 통과시킬지"만 정할 뿐)
 - **집계는 이름이 아니라 식별자(id)로 묶는다.** 동명이인·동명 브랜드가 한 줄로 합쳐지는 사고 방지.
 - **고친 코드도 다시 검증한다.** 손쉬운 수정(`SUM(DISTINCT)` 등)이 또 다른 버그일 수 있다.
+- **`GROUP BY`는 JOIN으로 늘어난 행을 다시 접는다** — 출력 행 수 = 그룹 종류 수. 집계값은 전체 합 하나가 아니라 **그룹마다 하나**.
+- **LEFT JOIN 빈 그룹: `COUNT`은 0, `SUM`은 NULL**(0 아님). 0으로 보이려면 `COALESCE(SUM(x), 0)`. 그리고 빈 쪽을 0으로 세려면 `COUNT(*)`(행을 셈, 1) 말고 `COUNT(조인테이블.컬럼)`(NULL 아닌 값, 0).
 - **(pandas)** `merge`는 SQL `JOIN`과 같다. 붙이는 쪽 키가 중복이면 행 복제(fan-out). 안 쓰는 프레임은 붙이지 않고, 붙일 땐 `validate="m:1"`로 사전 검증.
 - **(pandas)** `groupby`는 SQL `JOIN`과 **다르다** — 한 DataFrame을 키로 묶는 것. 기본 `dropna=True`라 **NaN 그룹 키 행을 조용히 버려** 총합이 원본과 어긋난다. 살리려면 `dropna=False`.
 - **(Python)** 함수 기본값에 `[]`·`{}`를 두면 정의될 때 한 번만 만들어져 호출 간 공유된다. 매번 새 값이 필요하면 함수 안에서 만든다.
