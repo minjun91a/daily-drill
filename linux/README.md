@@ -18,7 +18,7 @@
 | [1](L1-files.md) | 파일 조작 | `mkdir cp mv rm cat less` | 경로·inode | WSL ✅ | ✅ |
 | [2](L2-search.md) | 검색·집계 | `grep find wc sort uniq` | 텍스트 스트림 | WSL ✅ | ✅ |
 | [3](L3-pipes.md) | 파이프·리다이렉션 | `\| > >> 2> /dev/null` | stdin/stdout/stderr | WSL ✅ | ✅ |
-| 4 | 권한·소유권 | `chmod chown` rwx `644/755` | OS 권한 모델 | **WSL ✅** | ⬜ |
+| [4](L4-permissions.md) | 권한·소유권 | `chmod chown` rwx `644/755` | OS 권한 모델 | **WSL ✅** | 🟡 |
 | 5 | 프로세스 | `ps top kill &` `jobs fg/bg` | 프로세스·시그널 | **WSL ✅** | ⬜ |
 | 6 | 텍스트 처리 | `cut tr sed awk`(기초) | 스트림 가공 | Git Bash OK | ⬜ |
 | 7 | 환경·쉘 | `env export PATH .bashrc` | 환경변수·쉘 | Git Bash OK | ⬜ |
@@ -26,7 +26,7 @@
 | 9 | 네트워크·원격 | `ssh scp curl ss` | 포트·원격 | WSL ✅ | ⬜ |
 | 10 | 실무 | `cron tar gzip apt systemctl` | 서비스 운영 | **WSL ✅** | ⬜ |
 
-각 레벨 1~2일. 완료하면 상태 ⬜ → ✅, 아래에 `linux/L<n>-<주제>.md` 링크 추가.
+각 레벨 1~2일. 완료하면 상태 ⬜ → ✅(🟡=진행중), 아래에 `linux/L<n>-<주제>.md` 링크 추가.
 
 ## 하루 흐름
 개념 씨앗(1~2줄) → **예측**(명령이 낼 결과) → 실행·대조 → **검증 함정**(위험/틀린 명령의 문제 찾기) → **직접**(스펙대로 명령·한 줄 스크립트 작성) → 오답만 레벨 파일에 기록.
@@ -40,3 +40,4 @@
 | L1 파일 조작 | [L1-files.md](L1-files.md) | 2026-07-03 |
 | L2 검색·집계 | [L2-search.md](L2-search.md) | 2026-07-03 |
 | L3 파이프·리다이렉션 | [L3-pipes.md](L3-pipes.md) | 2026-07-08 |
+| L4 권한·소유권 (1일차) | [L4-permissions.md](L4-permissions.md) | 2026-07-09 · 진행중 (rwx·chmod·폴더x / 숫자·chown 남음) |
