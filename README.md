@@ -2,7 +2,7 @@
 
 <!-- ▼▼ 꾸준함 = 이 레포의 포트폴리오 신호. last-commit 배지가 "매일 한다"를 증명 ▼▼ -->
 ![last commit](https://img.shields.io/github/last-commit/minjun91a/daily-drill)
-![days](https://img.shields.io/badge/Day-7-brightgreen)
+![days](https://img.shields.io/badge/Day-8-brightgreen)
 ![rotation](https://img.shields.io/badge/rotation-SQL%E2%86%92pandas%E2%86%92Python-blue)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 <!-- ▲▲ 배지 끝 ▲▲ -->
@@ -60,6 +60,7 @@ GROUP BY u.id, u.name;
 | [5](days/2026-07-03-pandas.md) | 2026-07-03 | pandas | `groupby` ≠ SQL `JOIN` · groupby는 NaN 그룹 키를 기본(`dropna=True`)으로 버려 총합이 어긋남 → `dropna=False` · **직접 구현**: 결제수단별 집계 백지 작성(None 그룹 포함) | ✅ |
 | [6](days/2026-07-03-python.md) | 2026-07-03 | Python | 리스트를 순회하며 `remove`로 수정하면 index가 밀려 원소를 건너뜀 → 사본 순회(`nums[:]`) 또는 새 리스트(컴프리헨션) | ✅ |
 | [7](days/2026-07-08-sql.md) | 2026-07-08 | SQL | `GROUP BY`가 JOIN 복제를 다시 접음(출력=그룹 수) · 빈 그룹은 `COUNT`→0·`SUM`→NULL(`COALESCE`로 0) · `COUNT(*)`≠`COUNT(컬럼)` · **직접 구현**: LEFT JOIN 빈 그룹 0 처리 백지 작성(`COALESCE(SUM(x),0)`) | ✅ |
+| [8](days/2026-07-09-pandas.md) | 2026-07-09 | pandas | Series 산술은 위치 아닌 **라벨로 정렬** · 한쪽에만 있는 라벨은 통과 아닌 `NaN`(전염·float 승격) → `.add(fill_value=0)`으로 연산 *전에* 채움(사후 `.fillna(0)`은 값 증발) · **직접 구현**: 세 채널 합산 백지 작성(`.add()`는 둘씩 → 체이닝, 위치 인자는 `level`로 먹혀 무시) | ✅ |
 
 > 영역은 `SQL → pandas → Python`을 돌아가며. 각 날짜 = `오늘의 문제 → (재도전) → (복습) → 그날의 핵심`.
 > *재도전 = 틀린 걸 다른 유형으로 다시 풀어 맞출 때까지 · 복습 = 같은 개념을 힌트 없이 되짚기.*
@@ -81,6 +82,8 @@ GROUP BY u.id, u.name;
 - **LEFT JOIN 빈 그룹: `COUNT`은 0, `SUM`은 NULL**(0 아님). 0으로 보이려면 `COALESCE(SUM(x), 0)`. 그리고 빈 쪽을 0으로 세려면 `COUNT(*)`(행을 셈, 1) 말고 `COUNT(조인테이블.컬럼)`(NULL 아닌 값, 0).
 - **(pandas)** `merge`는 SQL `JOIN`과 같다. 붙이는 쪽 키가 중복이면 행 복제(fan-out). 안 쓰는 프레임은 붙이지 않고, 붙일 땐 `validate="m:1"`로 사전 검증.
 - **(pandas)** `groupby`는 SQL `JOIN`과 **다르다** — 한 DataFrame을 키로 묶는 것. 기본 `dropna=True`라 **NaN 그룹 키 행을 조용히 버려** 총합이 원본과 어긋난다. 살리려면 `dropna=False`.
+- **(pandas)** **Series 산술(`+`·`add`)은 위치가 아니라 라벨(인덱스)로 정렬**한다. 순서가 달라도 같은 라벨끼리 더해지지만, **한쪽에만 있는 라벨은 통과가 아니라 `NaN`**(어떤 숫자와 더해도 `NaN`, dtype은 float로 승격) → 값이 조용히 증발. 살리려면 `.add(other, fill_value=0)`으로 **연산 전에** 채운다(사후 `.fillna(0)`은 이미 사라진 값을 0으로 덮어 **더 틀린다**).
+- **(pandas)** `.add()`는 **둘씩만** 더한다(자기+상대 하나). 셋 이상은 **체이닝**(`a.add(b,...).add(c,...)`). 키워드는 이름으로 넘긴다 — 세 번째를 위치로 넣으면 `fill_value`가 아니라 `level` 자리라 **에러 없이 무시**된다. **에러가 안 나도 스펙과 대조**해야 "조용히 한 소스가 빠진" 그럴듯한 출력을 잡는다.
 - **(Python)** 함수 기본값에 `[]`·`{}`를 두면 정의될 때 한 번만 만들어져 호출 간 공유된다. 매번 새 값이 필요하면 함수 안에서 만든다.
 - **(Python)** `None` 비교는 항상 `is None`으로 한다. (`== None`은 커스텀 객체·배열에서 틀린 결과나 에러)
 - **(Python)** 리스트를 **순회하며 그 리스트를 수정**(`remove`/`del`)하면 index가 밀려 원소를 건너뛴다. 사본 순회(`nums[:]`) 또는 컴프리헨션으로 새 리스트를 만든다.
