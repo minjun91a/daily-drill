@@ -17,7 +17,7 @@
 |:-:|------|-----------|:---:|:---:|
 | [0](T0-structure.md) | OS란·구조 | 커널/유저 모드, 시스템콜, 인터럽트 | ★ | ✅ |
 | [1](T1-process-thread.md) | 프로세스 vs 스레드 | 주소공간, 공유 자원, 컨텍스트 스위칭 | ★★★ | ✅ |
-| 2 | 스케줄링 | 상태(ready/run/block), FCFS·RR·SJF, 선점 | ★★ | ⬜ |
+| [2](T2-scheduling.md) | 스케줄링 | 상태(ready/run/block), FCFS·RR·SJF, 선점 | ★★ | ✅ |
 | 3 | 동시성 | race condition, 임계구역, mutex/semaphore | ★★★ | ⬜ |
 | 4 | 데드락 | 4조건, 예방·회피(은행원)·탐지 | ★★ | ⬜ |
 | 5 | 메모리·가상메모리 | 페이징, 주소변환, TLB, page fault | ★★★ | ⬜ |
@@ -32,3 +32,4 @@
 |------|------|--------|
 | T0 OS란·구조 | [T0-structure.md](T0-structure.md) | 2026-07-03 |
 | T1 프로세스 vs 스레드 | [T1-process-thread.md](T1-process-thread.md) | 2026-07-08 |
+| T2 스케줄링 | [T2-scheduling.md](T2-scheduling.md) | 2026-07-09 |
