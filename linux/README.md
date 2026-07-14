@@ -19,7 +19,7 @@
 | [2](L2-search.md) | 검색·집계 | `grep find wc sort uniq` | 텍스트 스트림 | WSL ✅ | ✅ |
 | [3](L3-pipes.md) | 파이프·리다이렉션 | `\| > >> 2> /dev/null` | stdin/stdout/stderr | WSL ✅ | ✅ |
 | [4](L4-permissions.md) | 권한·소유권 | `chmod chown` rwx `644/755` | OS 권한 모델 | **WSL ✅** | ✅ |
-| 5 | 프로세스 | `ps top kill &` `jobs fg/bg` | 프로세스·시그널 | **WSL ✅** | ⬜ |
+| [5](L5-processes.md) | 프로세스 | `ps top kill &` `jobs fg/bg` `pkill` | 프로세스·시그널 | **WSL ✅** | ✅ |
 | 6 | 텍스트 처리 | `cut tr sed awk`(기초) | 스트림 가공 | Git Bash OK | ⬜ |
 | 7 | 환경·쉘 | `env export PATH .bashrc` | 환경변수·쉘 | Git Bash OK | ⬜ |
 | 8 | 쉘 스크립트 | shebang 변수 `if/for $1` 종료코드 | 자동화 | Git Bash OK | ⬜ |
@@ -41,3 +41,4 @@
 | L2 검색·집계 | [L2-search.md](L2-search.md) | 2026-07-03 |
 | L3 파이프·리다이렉션 | [L3-pipes.md](L3-pipes.md) | 2026-07-08 |
 | L4 권한·소유권 | [L4-permissions.md](L4-permissions.md) | 2026-07-09~10 (1·2일차 완료) |
+| L5 프로세스 | [L5-processes.md](L5-processes.md) | 2026-07-14 |
