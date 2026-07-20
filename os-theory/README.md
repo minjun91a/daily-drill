@@ -34,4 +34,4 @@
 | T1 프로세스 vs 스레드 | [T1-process-thread.md](T1-process-thread.md) | 2026-07-08 |
 | T2 스케줄링 | [T2-scheduling.md](T2-scheduling.md) | 2026-07-09 |
 | T3 동시성 | [T3-concurrency.md](T3-concurrency.md) | 2026-07-10 |
-| T4 데드락 | [T4-deadlock.md](T4-deadlock.md) | 2026-07-14 |
+| T4 데드락 | [T4-deadlock.md](T4-deadlock.md) | 2026-07-20 |

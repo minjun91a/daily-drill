@@ -41,4 +41,4 @@
 | L2 검색·집계 | [L2-search.md](L2-search.md) | 2026-07-03 |
 | L3 파이프·리다이렉션 | [L3-pipes.md](L3-pipes.md) | 2026-07-08 |
 | L4 권한·소유권 | [L4-permissions.md](L4-permissions.md) | 2026-07-09~10 (1·2일차 완료) |
-| L5 프로세스 | [L5-processes.md](L5-processes.md) | 2026-07-14 |
+| L5 프로세스 | [L5-processes.md](L5-processes.md) | 2026-07-20 |

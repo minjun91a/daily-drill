@@ -62,8 +62,8 @@ GROUP BY u.id, u.name;
 | [7](days/2026-07-08-sql.md) | 2026-07-08 | SQL | `GROUP BY`가 JOIN 복제를 다시 접음(출력=그룹 수) · 빈 그룹은 `COUNT`→0·`SUM`→NULL(`COALESCE`로 0) · `COUNT(*)`≠`COUNT(컬럼)` · **직접 구현**: LEFT JOIN 빈 그룹 0 처리 백지 작성(`COALESCE(SUM(x),0)`) | ✅ |
 | [8](days/2026-07-09-pandas.md) | 2026-07-09 | pandas | Series 산술은 위치 아닌 **라벨로 정렬** · 한쪽에만 있는 라벨은 통과 아닌 `NaN`(전염·float 승격) → `.add(fill_value=0)`으로 연산 *전에* 채움(사후 `.fillna(0)`은 값 증발) · **직접 구현**: 세 채널 합산 백지 작성(`.add()`는 둘씩 → 체이닝, 위치 인자는 `level`로 먹혀 무시) | ✅ |
 | [9](days/2026-07-10-python.md) | 2026-07-10 | Python | 중첩 리스트 `[[0]*3]*3`은 안쪽을 **참조 공유** → 한 칸 수정이 전 행에 번짐(예측 힌트 없이 통과) · 독립 행은 컴프리헨션 `[[0]*3 for _ in range(3)]` · `*`·기본값·대입은 복사 아닌 참조 증가(Day 3와 한 뿌리) · **직접 구현**: 독립 2D 보드 | ✅ |
-| [10](days/2026-07-13-sql.md) | 2026-07-13 | SQL | `!=`·`NOT IN`은 **NULL을 조용히 버림**(NULL 비교=UNKNOWN, `WHERE`는 TRUE만 통과) → 살리려면 `컬럼 IS NULL`을 `OR`로 · 모든 조건은 자기 컬럼 재명시(`IS NULL`도 왼쪽 컬럼 필요) · **직접 구현**: "A도 B도 아니다"=`!= AND !=`(=`NOT IN`), `OR`은 무조건 참(De Morgan) | ✅ |
-| [11](days/2026-07-14-pandas.md) | 2026-07-14 | pandas | **chained indexing(`df[mask][col]=값`)은 복사본에 쓰고 버림 → 원본 안 바뀜**(pandas 3.0 `ChainedAssignmentError`) · 부분 행 수정은 `df.loc[행 마스크, '열 라벨']=값` · `.loc`의 행=값 조건·열=이름 라벨(성격 다름, 이식 금지) · **재도전 힌트 없이 합격** · **직접 구현**: 마스크는 `==`(비교)이지 `=`(대입) 아님 | ✅ |
+| [10](days/2026-07-20-sql.md) | 2026-07-20 | SQL | `!=`·`NOT IN`은 **NULL을 조용히 버림**(NULL 비교=UNKNOWN, `WHERE`는 TRUE만 통과) → 살리려면 `컬럼 IS NULL`을 `OR`로 · 모든 조건은 자기 컬럼 재명시(`IS NULL`도 왼쪽 컬럼 필요) · **직접 구현**: "A도 B도 아니다"=`!= AND !=`(=`NOT IN`), `OR`은 무조건 참(De Morgan) | ✅ |
+| [11](days/2026-07-20-pandas.md) | 2026-07-20 | pandas | **chained indexing(`df[mask][col]=값`)은 복사본에 쓰고 버림 → 원본 안 바뀜**(pandas 3.0 `ChainedAssignmentError`) · 부분 행 수정은 `df.loc[행 마스크, '열 라벨']=값` · `.loc`의 행=값 조건·열=이름 라벨(성격 다름, 이식 금지) · **재도전 힌트 없이 합격** · **직접 구현**: 마스크는 `==`(비교)이지 `=`(대입) 아님 | ✅ |
 
 > 영역은 `SQL → pandas → Python`을 돌아가며. 각 날짜 = `오늘의 문제 → (재도전) → (복습) → 그날의 핵심`.
 > *재도전 = 틀린 걸 다른 유형으로 다시 풀어 맞출 때까지 · 복습 = 같은 개념을 힌트 없이 되짚기.*

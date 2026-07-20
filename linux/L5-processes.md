@@ -1,6 +1,6 @@
 [← Linux 트랙](README.md)
 
-# 🐧 Linux L5 — 프로세스 (2026-07-14 · WSL Ubuntu 24.04)
+# 🐧 Linux L5 — 프로세스 (2026-07-20 · WSL Ubuntu 24.04)
 
 > `ps`·`&`(백그라운드)·`jobs`·`kill`·시그널(TERM/KILL)·`pkill`. OS 이론 T1(프로세스)에서 배운 개념을 *명령으로* 손에 익힘.
 
