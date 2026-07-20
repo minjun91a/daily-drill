@@ -2,7 +2,7 @@
 
 <!-- ▼▼ 꾸준함 = 이 레포의 포트폴리오 신호. last-commit 배지가 "매일 한다"를 증명 ▼▼ -->
 ![last commit](https://img.shields.io/github/last-commit/minjun91a/daily-drill)
-![days](https://img.shields.io/badge/Day-11-brightgreen)
+![days](https://img.shields.io/badge/Day-12-brightgreen)
 ![rotation](https://img.shields.io/badge/rotation-SQL%E2%86%92pandas%E2%86%92Python-blue)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 <!-- ▲▲ 배지 끝 ▲▲ -->
