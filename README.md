@@ -2,7 +2,7 @@
 
 <!-- ▼▼ 꾸준함 = 이 레포의 포트폴리오 신호. last-commit 배지가 "매일 한다"를 증명 ▼▼ -->
 ![last commit](https://img.shields.io/github/last-commit/minjun91a/daily-drill)
-![days](https://img.shields.io/badge/Day-12-brightgreen)
+![days](https://img.shields.io/badge/Day-13-brightgreen)
 ![rotation](https://img.shields.io/badge/rotation-SQL%E2%86%92pandas%E2%86%92Python-blue)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 <!-- ▲▲ 배지 끝 ▲▲ -->
@@ -65,6 +65,7 @@ GROUP BY u.id, u.name;
 | [10](days/2026-07-20-sql.md) | 2026-07-20 | SQL | `!=`·`NOT IN`은 **NULL을 조용히 버림**(NULL 비교=UNKNOWN, `WHERE`는 TRUE만 통과) → 살리려면 `컬럼 IS NULL`을 `OR`로 · 모든 조건은 자기 컬럼 재명시(`IS NULL`도 왼쪽 컬럼 필요) · **직접 구현**: "A도 B도 아니다"=`!= AND !=`(=`NOT IN`), `OR`은 무조건 참(De Morgan) | ✅ |
 | [11](days/2026-07-20-pandas.md) | 2026-07-20 | pandas | **chained indexing(`df[mask][col]=값`)은 복사본에 쓰고 버림 → 원본 안 바뀜**(pandas 3.0 `ChainedAssignmentError`) · 부분 행 수정은 `df.loc[행 마스크, '열 라벨']=값` · `.loc`의 행=값 조건·열=이름 라벨(성격 다름, 이식 금지) · **재도전 힌트 없이 합격** · **직접 구현**: 마스크는 `==`(비교)이지 `=`(대입) 아님 | ✅ |
 | [12](days/2026-07-20-python.md) | 2026-07-20 | Python | **`if not x:`는 `None`·`0`·`""`·`[]`를 전부 한 그물로** 잡음 → 정상 값 `0`/빈 목록을 "없음"으로 오인해 **에러 없이** 덮어씀 · "정말 안 준 경우"만 잡으려면 **`if x is None:`**(Day 3 규칙이 존재 확인까지 확장) · **재도전 힌트 없이 합격**(`0`→`[]` 전이) · **직접 구현 1회 합격** | ✅ |
+| [13](days/2026-07-21-sql.md) | 2026-07-21 | SQL | **`LEFT JOIN`의 오른쪽 테이블 컬럼을 `WHERE`로 필터하면 바깥 조인이 `INNER`로 무너져** "없으면 0"이어야 할 고객이 통째로 증발 → 필터는 `ON`에 `AND`로(`WHERE`=사후 행 삭제, `ON`=붙일지 결정·왼쪽 보존) · 오답fix `OR IS NULL`은 짝 없는 경우(NULL)만 살리고 조건 미달값은 못 살림 · 교정 결과 예측서 `COUNT(컬럼)`은 NULL 안 셈(0)·"행 등장≠count값" 재확인 · **직접 구현**: 도전과제 집계 백지 작성(`ON` 필터+`COUNT(컬럼)`) 1회 합격 | ✅ |
 
 > 영역은 `SQL → pandas → Python`을 돌아가며. 각 날짜 = `오늘의 문제 → (재도전) → (복습) → 그날의 핵심`.
 > *재도전 = 틀린 걸 다른 유형으로 다시 풀어 맞출 때까지 · 복습 = 같은 개념을 힌트 없이 되짚기.*
@@ -86,6 +87,8 @@ GROUP BY u.id, u.name;
 - **LEFT JOIN 빈 그룹: `COUNT`은 0, `SUM`은 NULL**(0 아님). 0으로 보이려면 `COALESCE(SUM(x), 0)`. 그리고 빈 쪽을 0으로 세려면 `COUNT(*)`(행을 셈, 1) 말고 `COUNT(조인테이블.컬럼)`(NULL 아닌 값, 0).
 - **`!=`·`<>`·`IN`·`NOT IN`은 NULL을 조용히 버린다.** NULL 비교는 TRUE/FALSE가 아니라 **UNKNOWN**이고 `WHERE`는 결과가 TRUE인 행만 통과시킨다 → NULL 행이 소리 없이 사라진다. `!= 'x'`를 쓸 때마다 "이 컬럼에 NULL 있으면?"을 묻고, 살리려면 `컬럼 IS NULL`을 `OR`로 명시. (모든 조건은 자기 컬럼을 다시 쓴다 — `IS NULL`도 왼쪽에 컬럼 필요.)
 - **"A도 아니고 B도 아니다" = `!= A AND != B` (= `NOT IN (A, B)`).** `OR`로 이으면 값이 A·B 중 하나만 되므로 **항상 참** → 아무도 못 거른다. 부정을 나눠 넣을 땐 연결도 뒤집는다(De Morgan: `NOT(A OR B) = NOT A AND NOT B`). `AND`는 `OR`보다 우선순위가 높다 — 섞으면 괄호로 의도를 못박는다.
+- **`LEFT JOIN`의 오른쪽 테이블 컬럼을 `WHERE`로 필터하면 바깥 조인이 조용히 `INNER`로 무너진다.** `LEFT JOIN`이 짝 없는 왼쪽 행을 `NULL`로 남겨도, `WHERE`가 그 `NULL` 행을 **사후에** 지운다(`NULL` 비교=UNKNOWN이라 탈락, 조건 미달값도 탈락) → "짝 없으면 0/NULL로 남겨야" 하는 행이 통째로 사라진다. 필터를 **`ON`에 `AND`로** 두면 "무엇을 붙일지"만 정하고 안 붙어도 왼쪽 행을 보존 → `COUNT(오른쪽컬럼)=0`. "그럴듯한 오답 fix" `WHERE ... OR 오른쪽.col IS NULL`은 짝이 **아예 없는**(NULL) 경우만 살리고, 짝은 있으나 **조건 미달**인 경우는 못 살린다. 반사신경: `LEFT JOIN` 뒤 `WHERE`에 오른쪽 테이블 컬럼이 보이면 "이거 `INNER`로 바뀌는 것 아닌가?"
+- **`GROUP BY`는 행 순서를 보장하지 않는다.** 결과가 우연히 그룹 키 순으로 나와도 스펙이 정렬을 요구하면 `ORDER BY`를 명시. 그리고 집계 외 SELECT 컬럼은 `GROUP BY`에 함께 넣는다 — SQLite는 봐주지만 Postgres는 PK로 묶을 때만 함수 종속으로 허용(아니면 에러). 집계는 이름 아닌 **id**로 묶어 동명 위험을 없앤다.
 - **(pandas)** `merge`는 SQL `JOIN`과 같다. 붙이는 쪽 키가 중복이면 행 복제(fan-out). 안 쓰는 프레임은 붙이지 않고, 붙일 땐 `validate="m:1"`로 사전 검증.
 - **(pandas)** `groupby`는 SQL `JOIN`과 **다르다** — 한 DataFrame을 키로 묶는 것. 기본 `dropna=True`라 **NaN 그룹 키 행을 조용히 버려** 총합이 원본과 어긋난다. 살리려면 `dropna=False`.
 - **(pandas)** **Series 산술(`+`·`add`)은 위치가 아니라 라벨(인덱스)로 정렬**한다. 순서가 달라도 같은 라벨끼리 더해지지만, **한쪽에만 있는 라벨은 통과가 아니라 `NaN`**(어떤 숫자와 더해도 `NaN`, dtype은 float로 승격) → 값이 조용히 증발. 살리려면 `.add(other, fill_value=0)`으로 **연산 전에** 채운다(사후 `.fillna(0)`은 이미 사라진 값을 0으로 덮어 **더 틀린다**).
